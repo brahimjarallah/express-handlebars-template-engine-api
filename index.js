@@ -1,38 +1,21 @@
 const express = require("express")
 const path = require("path")
-const moment = require("moment")
+const logger = require("./middleware/logger")
 
 const app = express()
-const logger = (req, res, next) => {
-  //log the url request -> http://localhost:5000/api/members
-  console.log(
-    `${req.protocol}://${req.get("host")}${
-      req.originalUrl
-    }: ${moment().format()}`
-  )
-  next()
-}
-//init middleware
-app.use(logger)
-const fs = require("fs")
-const members = require("./Members")
-// app.get("/", (req, res) => {
-//   res.sendFile(path.join(__dirname, "public", "index.html"))
-// })
 
-//Get all members
-app.get("/api/members", (req, res) => res.json(members))
+//init middleware
+// app.use(logger)
+
+//Body Parser middleware
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 
 //set a static folder
 app.use(express.static(path.join(__dirname, "public")))
 
+// Members api Routes
+app.use("/api/members", require("./routes/api/members"))
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => console.log(`server started on port ${PORT}`))
-
-// #####  simple get request #####
-// app.get("/", (req, res) => {
-//   res.send("<h1>hello world</h1>")
-// })
-
-//#####  to get json data from a json file #####
-// const members = JSON.parse(fs.readFileSync("members.json"))
