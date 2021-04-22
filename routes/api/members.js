@@ -34,7 +34,8 @@ router.post("/", (req, res) => {
     return res.status(400).json({ msg: "Please include a name and email" })
   }
   members.push(newMember)
-  res.json(members)
+  // res.json(members)  // add to a json format
+  res.redirect("/") // redirect to page index to post into it
 })
 
 // Update Member
